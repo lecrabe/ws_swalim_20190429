@@ -12,13 +12,30 @@ aoi   <- getData('GADM',
                  country= countrycode, 
                  level=0)
 
+
+### GET SENTINEL TILING SYSTEM FROM Military Grid Reference System (MGRS)
+if(!file.exists(paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"))){
+  system(sprintf("wget -O %s %s",
+                 paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"),
+                 "http://earth-info.nga.mil/GandG/coordsys/zip/MGRS/MGRS_100kmSQ_ID/MGRS_100kmSQ_ID_38N.zip"
+  ))
+  
+  system(sprintf("unzip -o %s -d %s",
+                 paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"),
+                 gadm_dir
+  ))
+}
+
+aoi <- readOGR(paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.shp"))
+aoi <- aoi[aoi$X100kmSQ_ID == "NJ",]
+proj4string(aoi)
 (bb    <- extent(aoi))
 
 ### What grid size do we need ? 
 grid_size <- 20000          ## in meters
 
 ### GENERATE A GRID
-sqr_df <- generate_grid(aoi,grid_size/111320)
+sqr_df <- generate_grid(aoi,grid_size)
 
 nrow(sqr_df)
 
@@ -40,11 +57,9 @@ plot(tiles)
 plot(aoi_geo,add=T,border="blue")
 
 
-
-
 ### Select and Export one Tile as KML 
-one_tile <- tiles[1,]
-
+one_tile <- tiles[15,]
+plot(one_tile,col="green",add=T)
 export_name <- paste0("one_tile")
 writeOGR(obj=   one_tile,
          dsn=   paste(tile_dir,export_name,".kml",sep=""),
