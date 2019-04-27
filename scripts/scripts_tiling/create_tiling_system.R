@@ -73,7 +73,7 @@ writeOGR(obj=   one_tile,
 ##############################################################################
 
 ### Export ALL TILES as KML
-export_name <- paste0("tiling_system_all")
+export_name <- paste0("tiling_system_38NNJ")
 
 writeOGR(obj=tiles,
          dsn=paste(tile_dir,export_name,".kml",sep=""),
