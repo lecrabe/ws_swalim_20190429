@@ -5,9 +5,9 @@ Planned activities
 
 · Segmentation and LCLU classification (Sentinel-2/Landsat)
 
-· Change assessment analysis (Sentinel-2/Landsat)
+· Temporal profile calculation and plotting 
 
-· Temporal profile calculation and plotting (e.g. NDVI)
+· Time series analysis (Landsat)
 
 · Flood monitoring using Sentinel-1 backscatter data
 
