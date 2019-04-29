@@ -6,7 +6,7 @@
 ####################################################################################################
 ####################################################################################################
 
-### GET COUNTRY BOUNDARIES FROM THE WWW.GADM.ORG DATASET
+### READ PROSCAL BOUNDARIES
 aoi   <- readOGR(paste0(chcl_dir,"Proscal_Study_Area.shp"))
 
 
@@ -72,6 +72,15 @@ length(my_tiles)
 export_name <- paste0("charcoal_kilns_",length(my_tiles),"_tiles_",username)
 
 writeOGR(obj=my_tiles,
+         dsn=paste(tile_dir,export_name,".kml",sep=""),
+         layer= export_name,
+         driver = "KML",
+         overwrite_layer = T)
+
+### Export the ONE TILE IN THE subset
+export_name <- paste0("charcoal_kilns_one_tile_",username)
+
+writeOGR(obj=my_tiles[1,],
          dsn=paste(tile_dir,export_name,".kml",sep=""),
          layer= export_name,
          driver = "KML",
