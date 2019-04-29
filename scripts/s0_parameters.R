@@ -24,6 +24,7 @@ packages <- function(x){
 packages(Hmisc)
 packages(RCurl)
 packages(hexbin)
+packages(parallel)
 #packages(gfcanalysis)
 
 ### Load necessary packages
@@ -88,3 +89,8 @@ generate_grid <- function(aoi,size){
   proj4string(sqr_df) <- proj4string(aoi)
   sqr_df
 }
+
+print(paste0("you are : ",username))
+print(paste0("you use ",detectCores()," cores for this session"))
+
+      

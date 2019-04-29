@@ -56,24 +56,23 @@ users     <- read.csv(paste0(data_dir,"workshop_list_20190429.csv"))
 ### Assign each tile with a username
 df        <- data.frame(cbind(tiles@data[,"tileID"],users$username))
 names(df) <- c("tileID","username")
+#df$username <- sort(df$username)
 df$tileID <- as.numeric(df$tileID)
+table(df$username)
 
+### Create a final subset corresponding to your username
 tiles@data <- df 
 
-for(username in users$username){
-  ### Create a final subset corresponding to your username
-  my_tiles <- tiles[tiles$tileID %in% df[df$username == username,"tileID"],]
-  plot(my_tiles,add=T,col="black")
-  length(my_tiles)
-  
-  ### Export the final subset
-  export_name <- paste0("national_scale_",length(my_tiles),"_tiles_",username)
-  
-  writeOGR(obj=my_tiles,
-           dsn=paste(tile_dir,export_name,".kml",sep=""),
-           layer= export_name,
-           driver = "KML",
-           overwrite_layer = T)
-  
-}
+my_tiles <- tiles[tiles$tileID %in% df[df$username == username,"tileID"],]
 
+plot(my_tiles,add=T,col="green")
+length(my_tiles)
+
+### Export the final subset
+export_name <- paste0("charcoal_kilns_",length(my_tiles),"_tiles_",username)
+
+writeOGR(obj=my_tiles,
+         dsn=paste(tile_dir,export_name,".kml",sep=""),
+         layer= export_name,
+         driver = "KML",
+         overwrite_layer = T)
