@@ -7,27 +7,9 @@
 ####################################################################################################
 
 ### GET COUNTRY BOUNDARIES FROM THE WWW.GADM.ORG DATASET
-aoi   <- getData('GADM',
-                 path=gadm_dir, 
-                 country= countrycode, 
-                 level=0)
+aoi   <- readOGR(paste0(chcl_dir,"Proscal_Study_Area.shp"))
 
 
-### GET SENTINEL TILING SYSTEM FROM Military Grid Reference System (MGRS)
-if(!file.exists(paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"))){
-  system(sprintf("wget -O %s %s",
-                 paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"),
-                 "http://earth-info.nga.mil/GandG/coordsys/zip/MGRS/MGRS_100kmSQ_ID/MGRS_100kmSQ_ID_38N.zip"
-  ))
-  
-  system(sprintf("unzip -o %s -d %s",
-                 paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.zip"),
-                 gadm_dir
-  ))
-}
-
-aoi <- readOGR(paste0(gadm_dir,"MGRS_100kmSQ_ID_38N.shp"))
-aoi <- aoi[aoi$X100kmSQ_ID == "NJ",]
 proj4string(aoi)
 (bb    <- extent(aoi))
 
@@ -35,7 +17,7 @@ proj4string(aoi)
 grid_size <- 20000          ## in meters
 
 ### GENERATE A GRID
-sqr_df <- generate_grid(aoi,grid_size)
+sqr_df <- generate_grid(aoi,grid_size/111320)
 
 nrow(sqr_df)
 
@@ -57,27 +39,41 @@ plot(tiles)
 plot(aoi_geo,add=T,border="blue")
 
 
-### Select and Export one Tile as KML 
-one_tile <- tiles[15,]
-plot(one_tile,col="green",add=T)
-export_name <- paste0("one_tile")
-writeOGR(obj=   one_tile,
-         dsn=   paste(tile_dir,export_name,".kml",sep=""),
-         layer= export_name,
-         driver = "KML",
-         overwrite_layer = T)
-
-##############################################################################
-### CONVERT TO A FUSION TABLE
-### For example:    
-##############################################################################
 
 ### Export ALL TILES as KML
-export_name <- paste0("tiling_system_38NNJ")
+export_name <- paste0("tiling_system_charcoal_kilns")
 
 writeOGR(obj=tiles,
          dsn=paste(tile_dir,export_name,".kml",sep=""),
          layer= export_name,
          driver = "KML",
          overwrite_layer = T)
+
+### Read the list of usernames
+users     <- read.csv(paste0(data_dir,"workshop_list_20190429.csv"))
+
+
+### Assign each tile with a username
+df        <- data.frame(cbind(tiles@data[,"tileID"],users$username))
+names(df) <- c("tileID","username")
+df$tileID <- as.numeric(df$tileID)
+
+tiles@data <- df 
+
+for(username in users$username){
+  ### Create a final subset corresponding to your username
+  my_tiles <- tiles[tiles$tileID %in% df[df$username == username,"tileID"],]
+  plot(my_tiles,add=T,col="black")
+  length(my_tiles)
+  
+  ### Export the final subset
+  export_name <- paste0("national_scale_",length(my_tiles),"_tiles_",username)
+  
+  writeOGR(obj=my_tiles,
+           dsn=paste(tile_dir,export_name,".kml",sep=""),
+           layer= export_name,
+           driver = "KML",
+           overwrite_layer = T)
+  
+}
 

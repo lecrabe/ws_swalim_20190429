@@ -59,6 +59,7 @@ data_dir <- paste0(rootdir,"data/")
 gadm_dir <- paste0(rootdir,"data/gadm/")
 bfst_dir <- paste0(rootdir,"data/bfast/")
 tile_dir <- paste0(rootdir,"data/tiling/")
+chcl_dir <- paste0(rootdir,"data/charcoal_kilns/")
 
 dir.create(gfcstore_dir,showWarnings = F)
 dir.create(esastore_dir,showWarnings = F)
