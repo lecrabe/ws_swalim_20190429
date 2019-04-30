@@ -16,7 +16,7 @@
 
 ###### INSTRUCTIONS
 ###### Get an authorized download link here: http://2016africalandcover20m.esrin.esa.int/download.php
-authorized_url <- "http://2016africalandcover20m.esrin.esa.int/download.php?token=fdf64398367159f24ad7fb800b19dee0"
+authorized_url <- "http://2016africalandcover20m.esrin.esa.int/download.php?token=44f2298ac1670d43df94a116c734c13e"
 
 ## DOWNLOAD
 download.file(authorized_url,
@@ -33,5 +33,3 @@ system(sprintf("unzip %s -d %s",
 system(sprintf("rm %s",
                paste0(esastore_dir,"esa_cci.zip")
                ))
-
-setwd(rootdir)

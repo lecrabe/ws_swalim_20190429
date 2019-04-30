@@ -61,6 +61,7 @@ gadm_dir <- paste0(rootdir,"data/gadm/")
 bfst_dir <- paste0(rootdir,"data/bfast/")
 tile_dir <- paste0(rootdir,"data/tiling/")
 chcl_dir <- paste0(rootdir,"data/charcoal_kilns/")
+esa_dir  <- paste0(rootdir,"data/esa_cci/")
 
 dir.create(gfcstore_dir,showWarnings = F)
 dir.create(esastore_dir,showWarnings = F)
@@ -69,7 +70,7 @@ dir.create(data_dir,showWarnings = F)
 dir.create(gadm_dir,showWarnings = F)
 dir.create(tile_dir,showWarnings = F)
 dir.create(bfst_dir,showWarnings = F)
-  
+dir.create(esa_dir,showWarnings = F)
 
 ############ CREATE A FUNCTION TO GENERATE REGULAR GRIDS
 generate_grid <- function(aoi,size){
