@@ -1,7 +1,8 @@
 results_directory <- "/media/dannunzio/OSDisk/Users/dannunzio/Documents/countries/somalia/data/results_day2/"
+base   <- "results_kilns"
 
 aoi    <- paste0(chcl_dir,"Proscal_Study_Area.shp")
-base   <- "results_kilns"
+
 
 result <- paste0(results_directory,"tmp_",base,".tif")
 
@@ -113,106 +114,3 @@ system(sprintf("gdal_calc.py -A %s --co=COMPRESS=LZW --type=UInt16 --overwrite -
                "(A-floor(A))*365"
 ))
 
-
-#################### ALIGN GLAD WITH GFC
-mask   <- paste0(results_directory,base,"_amplitude_threshold.tif")
-proj   <- proj4string(raster(mask))
-extent <- extent(raster(mask))
-res    <- res(raster(mask))[1]
-
-
-#################### ALIGN GFC TREE COVER WITH SEGMENTS
-input  <- paste0(esa_dir,"esa_crop.tif")
-ouput  <- paste0(esa_dir,"esa_crop_kilns.tif")
-
-system(sprintf("gdalwarp -co COMPRESS=LZW -t_srs \"%s\" -te %s %s %s %s -tr %s %s %s %s -overwrite",
-               proj4string(raster(mask)),
-               extent(raster(mask))@xmin,
-               extent(raster(mask))@ymin,
-               extent(raster(mask))@xmax,
-               extent(raster(mask))@ymax,
-               res(raster(mask))[1],
-               res(raster(mask))[2],
-               input,
-               ouput
-))
-
-#############################################################
-### AOI
-system(sprintf("python %s/oft-rasterize_attr.py -v %s -i %s -o %s -a %s",
-               paste0(scriptdir,"scripts_misc/"),
-               paste0(chcl_dir,"kilns_2016_2017.shp"),
-               paste0(results_directory,base,"_amplitude_threshold.tif"),
-               paste0(chcl_dir,"kilns_2016_2017.tif"),
-               "Radius_m"
-))
-
-##################### CREATE A DISTANCE TO KILNS
-system(sprintf("gdal_proximity.py -co COMPRESS=LZW -ot Int16 -distunits PIXEL %s %s",
-               paste0(chcl_dir,"kilns_2016_2017.tif"),
-               paste0(chcl_dir,"dist_kilns.tif")
-))
-
-
-##################### READ THE DIFFERENT LAYERS AND STORE AS ONE DATA TABLE
-r1 <- raster(paste0(results_directory,base,"_amplitude_threshold.tif"))
-r2 <- raster(paste0(esa_dir,"esa_crop_kilns.tif"))
-r3 <- raster(paste0(chcl_dir,"dist_kilns.tif"))
-
-c1 <- rasterToPoints(r1)
-c2 <- rasterToPoints(r2)
-c3 <- rasterToPoints(r3)
-
-c10 <- c1 != 0
-
-d1 <- data.frame(c1)
-d2 <- data.frame(c2)
-d3 <- data.frame(c3)
-
-df <- cbind(d1,
-            d2$esa_crop_kilns,
-            d3$dist_kilns)
-
-names(df) <- c("x","y","bfast","esa","dist_to_kilns")
-
-##################### SELECT IN LAND DATA ONLY AND EXPORT
-summary(df)
-df1 <- df[df$data_mask == 1,]
-hist(df1$tree_cover)
-write.csv(df1,paste0(resdir,"resultats_20190212.csv"),row.names = F)
-
-##################### SIMPLIFY TABLE HEADERS
-df1 <- read.csv(paste0(resdir,"resultats_20190212.csv"))
-df1$loss <- 0
-df1[df1$loss_year > 0 & df1$tree_cover > 30,]$loss <- 1
-
-df1$pa <- 0 
-df1[df1$dist_to_forets == 0,]$pa <- 1
-
-df1$forest <- 0
-df1[df1$tree_cover > 30,]$forest <- 1
-
-
-##################### CREATE THEME
-papertheme <- theme_bw(base_size=12, base_family = 'Arial') +
-  theme(legend.position='top')
-
-dat <- df1[,c("x","y","forest","pa","loss","dist_to_roads","dist_to_forets")]
-names(dat) <- c("x","y","forest","pa","loss","dist_to_roads","dist_to_pa")
-
-##################### REMOVE NON FOREST PIXELS
-dat <- dat[-which(dat$forest==0),]
-
-#####################  CONVERT TO FACTOR
-dat$pa   <- as.factor(dat$pa)
-dat$loss <- as.factor(dat$loss)
-
-##################### RUN THE MODEL
-modbin <- gam(loss ~ s(dist_to_roads, by=pa, k=3) + pa,
-              data = dat, method='REML', family = binomial())
-
-##################### PLOT RESULTS
-plot_model(modbin, type = "pred", terms = c("dist_to_roads","pa"))
-
-AIC(modbin)
-summary(modbin)
