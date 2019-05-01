@@ -40,15 +40,6 @@ plot(aoi_geo,add=T,border="blue")
 
 
 
-### Export ALL TILES as KML
-export_name <- paste0("tiling_system_charcoal_kilns")
-
-writeOGR(obj=tiles,
-         dsn=paste(tile_dir,export_name,".kml",sep=""),
-         layer= export_name,
-         driver = "KML",
-         overwrite_layer = T)
-
 ### Read the list of usernames
 users     <- read.csv(paste0(data_dir,"workshop_list_20190429.csv"))
 
@@ -63,6 +54,14 @@ table(df$username)
 ### Create a final subset corresponding to your username
 tiles@data <- df 
 
+### Export ALL TILES as KML
+export_name <- paste0("tiling_system_charcoal_kilns")
+
+writeOGR(obj=tiles,
+         dsn=paste(tile_dir,export_name,".kml",sep=""),
+         layer= export_name,
+         driver = "KML",
+         overwrite_layer = T)
 my_tiles <- tiles[tiles$tileID %in% df[df$username == username,"tileID"],]
 
 plot(my_tiles,add=T,col="green")
