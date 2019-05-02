@@ -1,4 +1,4 @@
-cd ~/downloads/day2;
+cd ~/downloads/day2_accadius;
 
 for file in */results/tile*all*/bfast*.tif;
   do tile=`echo $file | cut -d'/' -f1`;
