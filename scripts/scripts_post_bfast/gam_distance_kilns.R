@@ -79,7 +79,7 @@ df$esa  <- df$esa - 1
 df$dist <- df$dist - 1
 
 ##################### CHECK ESA CODES
-table(df$esa)
+#table(df$esa)
 
 ##################### SIMPLIFY TABLE HEADERS
 df1 <- df
@@ -90,7 +90,7 @@ df1[(df1$bfast %in% 4:5) & (df1$esa %in% 1:2),]$loss <- 1
 df1$forest <- 0
 df1[(df1$esa %in% 1:2),]$forest <- 1
 
-table(df1$loss,df1$forest)
+#table(df1$loss,df1$forest)
 
 ##################### CREATE THEME
 papertheme <- theme_bw(base_size=12, base_family = 'Arial') +
