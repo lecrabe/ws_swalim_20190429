@@ -17,7 +17,7 @@ Activities carried out included:
 ![Alt text](/docs/images/ndvi_profile.jpeg?raw=true)
 
 - Time series analysis of Landsat data for vegetation degradation in relation with charcoal kilns
-
+ 
 ![Alt text](/docs/images/bfast.jpeg?raw=true)
 
 - Generalized additive Model to show relationship between probability of disturbance and distance to kilns
