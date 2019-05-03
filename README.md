@@ -21,6 +21,10 @@ Activities carried out included:
 ![Alt text](/docs/images/bfast.jpeg?raw=true)
 
 
+- Generalized additive Model to show relationship between probability of disturbance and distance to kilns
+
+![Alt text](/docs/images/GAM.jpeg?raw=true)
+
 - Flood monitoring using Sentinel-1 backscatter data
 
 ![Alt text](/docs/images/floods.jpeg?raw=true)
