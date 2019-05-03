@@ -8,18 +8,9 @@ The GEE scripts for S1 SAR data processing are adapted from A.Vollrath and avail
 
 Activities carried out included:
 
-- Segmentation and LCLU classification (Sentinel-2/Landsat)
-
-![Alt text](/docs/images/supervised_classification.jpeg?raw=true)
-
-- Temporal profile calculation and plotting
-
-![Alt text](/docs/images/ndvi_profile.jpeg?raw=true)
-
 - Time series analysis of Landsat data for vegetation degradation in relation with charcoal kilns
  
 ![Alt text](/docs/images/bfast.jpeg?raw=true)
-
 
 - Generalized additive Model to show relationship between probability of disturbance and distance to kilns
 
@@ -28,3 +19,12 @@ Activities carried out included:
 - Flood monitoring using Sentinel-1 backscatter data
 
 ![Alt text](/docs/images/floods_2.png?raw=true)
+
+- Mosaic creation and LCLU classification (Sentinel-2/Landsat)
+
+![Alt text](/docs/images/supervised_classification.jpeg?raw=true)
+
+- Temporal profile calculation and plotting
+
+![Alt text](/docs/images/ndvi_profile.jpeg?raw=true)
+
