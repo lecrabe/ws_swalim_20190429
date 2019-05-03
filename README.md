@@ -27,4 +27,4 @@ Activities carried out included:
 
 - Flood monitoring using Sentinel-1 backscatter data
 
-![Alt text](/docs/images/floods.jpeg?raw=true)
+![Alt text](/docs/images/floods_2.png?raw=true)
